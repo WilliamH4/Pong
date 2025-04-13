@@ -27,6 +27,7 @@ void updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlo
         ballXVelo+=1;
     }
 
+    //left wall colision logic
     if (ballpos[0]<radius){
         if (ballXVelo<0){
             ballXVelo=ballXVelo*-1;
@@ -34,6 +35,8 @@ void updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlo
         }
         score[1]+=1;
         printf("hit left wall\n");
+
+    //right wall collision logic
     }else if (ballpos[0]+radius>width){
         if (ballXVelo>0){
             ballXVelo=ballXVelo*-1;
@@ -43,10 +46,13 @@ void updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlo
         printf("hit right wall\n");
     }
 
+    //top wall collision logic
     if (ballpos[1]<radius){
         if(ballYVelo<0){
             ballYVelo=-ballYVelo;
         }
+
+    //bottom wall collision logic
     }else if(ballpos[1]+radius>height){
         if(ballYVelo>0){
             ballYVelo=-ballYVelo;
