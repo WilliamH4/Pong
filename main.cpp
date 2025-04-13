@@ -2,11 +2,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlockerY,int computtorBlockerY,int score){
+void updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlockerY,int computtorBlockerY,int score[2]){
     static int ballXVelo=10;
     static int ballYVelo=7;
+    static int clock=0;//used to speed up the game slowly
     //static bool up=1;
     //ballpos[0]=ballpos[0]+1;
+
+    //clock+=1;
+    if (clock>=50){
+        clock=0;
+        if(ballXVelo>0){
+            ballXVelo+=1;
+        }else{
+            ballXVelo-=1;
+        }
+    }
 
     if (ballYVelo>12){
         ballYVelo=12;
@@ -19,14 +30,16 @@ int updateBallPos(int ballpos[2],int radius,int width, int height,int playerBloc
     if (ballpos[0]<radius){
         if (ballXVelo<0){
             ballXVelo=ballXVelo*-1;
+            clock+=1;
         }
-        score=0;
+        score[1]+=1;
         printf("hit left wall\n");
     }else if (ballpos[0]+radius>width){
         if (ballXVelo>0){
             ballXVelo=ballXVelo*-1;
+            clock+=1;
         }
-        score+=1;
+        score[0]+=1;
         printf("hit right wall\n");
     }
 
@@ -47,6 +60,7 @@ int updateBallPos(int ballpos[2],int radius,int width, int height,int playerBloc
     if (ballpos[1]>=playerBlockerY&&ballpos[1]<=playerBlockerY+152&&ballpos[0]<=115&&ballpos[0]>=90){
         if (ballXVelo<0){
             ballXVelo=ballXVelo*-1;
+            clock+=1;
         }
         if (ballpos[1]<playerBlockerY+19){
             ballYVelo-=4;
@@ -72,6 +86,7 @@ int updateBallPos(int ballpos[2],int radius,int width, int height,int playerBloc
     if (ballpos[1]>=computtorBlockerY&&ballpos[1]<=computtorBlockerY+152&&ballpos[0]>=width-95){
         if (ballXVelo>0){
             ballXVelo=ballXVelo*-1;
+            clock+=1;
         }    
 
         if (ballpos[1]<computtorBlockerY+19){
@@ -97,16 +112,11 @@ int updateBallPos(int ballpos[2],int radius,int width, int height,int playerBloc
 
 }
 
-    
-
-    //deales with the movn=ment of the ball
 
     ballpos[0]=ballpos[0]+ballXVelo;
    
-    
     ballpos[1]=ballpos[1]+ballYVelo;
     //printf("ballpos X:%d%s%d\n",ballpos[0]," Y:", ballpos[1]);
-    return score;
 }
 
 int GetPlayerplayerBlockerY(int y,int height){
@@ -144,7 +154,8 @@ int main() {
     int height=1000;
     InitWindow(width, height, "pong rip off");
     int radius=25;
-    int score =0;    
+    int *score =new int[2];
+    score[0]=0,score[1]=0;    
     int *ballpos =new int[2];
     ballpos[0]=width/2;ballpos[1]=height/2;//0 is the x and 1 is the y
     int playerBlockerY=0,computerBlockerY=0;
@@ -153,7 +164,7 @@ int main() {
         BeginDrawing();
         ClearBackground(BLACK);
         char string[50];
-        sprintf(string,"%s%d","score: ",score);
+        sprintf(string,"%s%d%s%d","score: ",score[0]," to ",score[1]);
         //printf("score:%d\n",score);
         DrawText(string,width/2,100, 20, DARKGRAY);
 
@@ -164,7 +175,7 @@ int main() {
         computerBlockerY=GetComputorBlockerY(computerBlockerY,ballpos,height,width);
         playerBlockerY=GetPlayerplayerBlockerY(playerBlockerY,height);
 
-        score=updateBallPos(ballpos,radius,width,height,playerBlockerY,computerBlockerY,score);
+        updateBallPos(ballpos,radius,width,height,playerBlockerY,computerBlockerY,score);
         //printf("ballpos:%d%s%d\n",ballpos[0]," ",ballpos[1]);
         DrawCircle(ballpos[0],ballpos[1],radius,WHITE);
 
