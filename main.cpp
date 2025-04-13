@@ -8,10 +8,19 @@ void updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlo
     static int ballXVelo=startingXVelo;
     static int ballYVelo=startingYVelo;
     static int clock=0;//used to speed up the game slowly
-    //static bool up=1;
-    //ballpos[0]=ballpos[0]+1;
+    static bool reset=0;
 
-    //clock+=1;
+
+    if (reset==1){
+        WaitTime(1);
+        reset=0;
+        ballXVelo=10;
+        ballYVelo=0;
+        clock=0;
+        ballpos[0]=width/2;
+        ballpos[1]=height/2;
+    }
+
     if (clock>=2){
         clock=0;
         if(ballXVelo>0){
@@ -31,14 +40,11 @@ void updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlo
 
     //left wall colision logic
     if (ballpos[0]<radius){
-        ballXVelo=startingXVelo;
         if (ballXVelo<0){
-            ballXVelo=ballXVelo*-1;
-            clock=0;
+            score[1]+=1;
+            reset=1;
         }
-        clock=0;
 
-        score[1]+=1;
         printf("hit left wall\n");
 
     //right wall collision logic
@@ -46,9 +52,9 @@ void updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlo
         ballXVelo=startingXVelo;
         if (ballXVelo>0){
             ballXVelo=ballXVelo*-1;
-            clock=0;
+            score[0]+=1;
+            reset=1;
         }
-        score[0]+=1;
         printf("hit right wall\n");
     }
 
@@ -149,11 +155,24 @@ int GetPlayerplayerBlockerY(int y,int height){
 }
 int GetComputorBlockerY(int y,int ballpos[], int height, int width){
     //75 is to keep the ball in the middle of the blocker.
-    if (ballpos[1]-76>y){
-        y+=7;
-    }else if (ballpos[1]-76<y){
-        y-=7;
+    int middle=y+76;
+
+    int startY=y;
+
+    y+=ballpos[1]-middle;
+
+    if (startY-y>7){
+        y=startY-7;
+    }else if(y-startY>7){
+        y=startY+7;
     }
+    
+
+    // if (ballpos[1]>middle){
+    //     y+=7;
+    // }else if (ballpos[1]<middle){
+    //     y-=7;
+    // }
     //printf("blocker y:%d\n",y);
     DrawRectangle(width-70,y,25,152,RED);
 
