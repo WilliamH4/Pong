@@ -1,4 +1,4 @@
-#pong game
+# pong game
 this is a simple pong game its built using the raylib library and it is my first use of a .bat file to help commplile the code. 
 
 ## mechanics
