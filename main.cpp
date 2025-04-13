@@ -3,68 +3,108 @@
 #include <stdlib.h>
 
 int updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlockerY,int computtorBlockerY,int score){
-    static int ballXVelo=15;
+    static int ballXVelo=10;
     static int ballYVelo=7;
+    //static bool up=1;
     //ballpos[0]=ballpos[0]+1;
-    static bool right=1;
-    static bool up=1;
+
+    if (ballYVelo>12){
+        ballYVelo=12;
+    }
+
+    if (ballXVelo==0){
+        ballXVelo+=1;
+    }
+
     if (ballpos[0]<radius){
-        right=1;
+        if (ballXVelo<0){
+            ballXVelo=ballXVelo*-1;
+        }
         score=0;
         printf("hit left wall\n");
     }else if (ballpos[0]+radius>width){
-        right=0;
+        if (ballXVelo>0){
+            ballXVelo=ballXVelo*-1;
+        }
         score+=1;
         printf("hit right wall\n");
     }
 
     if (ballpos[1]<radius){
-        up=0;
+        if(ballYVelo<0){
+            ballYVelo=-ballYVelo;
+        }
     }else if(ballpos[1]+radius>height){
-        up=1;
+        if(ballYVelo>0){
+            ballYVelo=-ballYVelo;
+        }
     }
 
 
     //add the check for the player blocker
-    if (ballpos[1]>=playerBlockerY&&ballpos[1]<=playerBlockerY+152&&ballpos[0]<=115){
-        right=1;
-        if (ballpos[1]>playerBlockerY+19){
+
+    //we check if the ball is in the same horisontal space as the blocker then we check if its x pos is less then the blockers if it is we deflect it
+    if (ballpos[1]>=playerBlockerY&&ballpos[1]<=playerBlockerY+152&&ballpos[0]<=115&&ballpos[0]>=90){
+        if (ballXVelo<0){
+            ballXVelo=ballXVelo*-1;
+        }
+        if (ballpos[1]<playerBlockerY+19){
             ballYVelo-=4;
-        }else if(ballpos[1]>playerBlockerY+19*2){
+        }else if(ballpos[1]<playerBlockerY+19*2){
             ballYVelo-=3;
-        }else if(ballpos[1]>playerBlockerY+19*2){
+        }else if(ballpos[1]<playerBlockerY+19*2){
             ballYVelo-=2;
-        }else if(ballpos[1]>playerBlockerY+19*3){
+        }else if(ballpos[1]<playerBlockerY+19*3){
             ballYVelo-=1;
-        }else if(ballpos[1]>playerBlockerY+19*4){
+        }else if(ballpos[1]<playerBlockerY+19*4){
             ballYVelo+=0;
-        }else if(ballpos[1]>playerBlockerY+19*5){
+        }else if(ballpos[1]<playerBlockerY+19*5){
             ballYVelo+=1;
-        }else if(ballpos[1]>playerBlockerY+19*6){
+        }else if(ballpos[1]<playerBlockerY+19*6){
             ballYVelo+=2;
-        }else if(ballpos[1]>playerBlockerY+19*7){
+        }else if(ballpos[1]<playerBlockerY+19*7){
             ballYVelo+=3;
-        }else if(ballpos[1]>playerBlockerY+19*8){
+        }else if(ballpos[1]<playerBlockerY+19*8){
             ballYVelo+=4;
         }
     }
     //add the check for the other blocker
     if (ballpos[1]>=computtorBlockerY&&ballpos[1]<=computtorBlockerY+152&&ballpos[0]>=width-95){
-        right=0;
-    }
+        if (ballXVelo>0){
+            ballXVelo=ballXVelo*-1;
+        }    
+
+        if (ballpos[1]<computtorBlockerY+19){
+            ballYVelo-=4;
+        }else if(ballpos[1]<computtorBlockerY+19*2){
+            ballYVelo-=3;
+        }else if(ballpos[1]<computtorBlockerY+19*2){
+            ballYVelo-=2;
+        }else if(ballpos[1]<computtorBlockerY+19*3){
+            ballYVelo-=1;
+        }else if(ballpos[1]<computtorBlockerY+19*4){
+            ballYVelo+=0;
+        }else if(ballpos[1]<computtorBlockerY+19*5){
+            ballYVelo+=1;
+        }else if(ballpos[1]<computtorBlockerY+19*6){
+            ballYVelo+=2;
+        }else if(ballpos[1]<computtorBlockerY+19*7){
+            ballYVelo+=3;
+        }else if(ballpos[1]<computtorBlockerY+19*8){
+            ballYVelo+=4;
+        }
+
+
+}
+
     
 
     //deales with the movn=ment of the ball
-    if (right==1){
-        ballpos[0]=ballpos[0]+abs(ballXVelo);
-    }else if(right==0){
-        ballpos[0]=ballpos[0]-ballXVelo;
-    }
-    if (up==1){
-        ballpos[1]=ballpos[1]-abs(ballYVelo);
-    }else if (up==0){
-        ballpos[1]=ballpos[1]+abs(ballYVelo);
-    }
+
+    ballpos[0]=ballpos[0]+ballXVelo;
+   
+    
+    ballpos[1]=ballpos[1]+ballYVelo;
     //printf("ballpos X:%d%s%d\n",ballpos[0]," Y:", ballpos[1]);
     return score;
 }
