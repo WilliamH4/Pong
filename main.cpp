@@ -14,12 +14,14 @@ void updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlo
     if (reset==1){
         WaitTime(1);
         reset=0;
-        ballXVelo=10;
-        ballYVelo=0;
+        ballXVelo=startingXVelo;
+        ballYVelo=startingYVelo;
         clock=0;
         ballpos[0]=width/2;
         ballpos[1]=height/2;
     }
+
+    //ballYVelo+=1;
 
     if (clock>=2){
         clock=0;
@@ -75,29 +77,29 @@ void updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlo
     //add the check for the player blocker
 
     //we check if the ball is in the same horisontal space as the blocker then we check if its x pos is less then the blockers if it is we deflect it
-    if (ballpos[1]>=playerBlockerY&&ballpos[1]<=playerBlockerY+152&&ballpos[0]<=115&&ballpos[0]>=90){
+    if (ballpos[1]>=playerBlockerY&&ballpos[1]<=playerBlockerY+152&&ballpos[0]<=115){
         if (ballXVelo<0){
             ballXVelo=ballXVelo*-1;
             clock+=1;
-        }
-        if (ballpos[1]<playerBlockerY+19){
-            ballYVelo-=4;
-        }else if(ballpos[1]<playerBlockerY+19*2){
-            ballYVelo-=3;
-        }else if(ballpos[1]<playerBlockerY+19*2){
-            ballYVelo-=2;
-        }else if(ballpos[1]<playerBlockerY+19*3){
-            ballYVelo-=1;
-        }else if(ballpos[1]<playerBlockerY+19*4){
-            ballYVelo+=0;
-        }else if(ballpos[1]<playerBlockerY+19*5){
-            ballYVelo+=1;
-        }else if(ballpos[1]<playerBlockerY+19*6){
-            ballYVelo+=2;
-        }else if(ballpos[1]<playerBlockerY+19*7){
-            ballYVelo+=3;
-        }else if(ballpos[1]<playerBlockerY+19*8){
-            ballYVelo+=4;
+            if (ballpos[1]<playerBlockerY+19){
+                ballYVelo-=4;
+            }else if(ballpos[1]<playerBlockerY+19*2){
+                ballYVelo-=3;
+            }else if(ballpos[1]<playerBlockerY+19*2){
+                ballYVelo-=2;
+            }else if(ballpos[1]<playerBlockerY+19*3){
+                ballYVelo-=1;
+            }else if(ballpos[1]<playerBlockerY+19*4){
+                ballYVelo+=0;
+            }else if(ballpos[1]<playerBlockerY+19*5){
+                ballYVelo+=1;
+            }else if(ballpos[1]<playerBlockerY+19*6){
+                ballYVelo+=2;
+            }else if(ballpos[1]<playerBlockerY+19*7){
+                ballYVelo+=3;
+            }else if(ballpos[1]<playerBlockerY+19*8){
+                ballYVelo+=4;
+            }
         }
     }
     //add the check for the other blocker
@@ -105,26 +107,25 @@ void updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlo
         if (ballXVelo>0){
             ballXVelo=ballXVelo*-1;
             clock+=1;
-        }    
-
-        if (ballpos[1]<computtorBlockerY+19){
-            ballYVelo-=4;
-        }else if(ballpos[1]<computtorBlockerY+19*2){
-            ballYVelo-=3;
-        }else if(ballpos[1]<computtorBlockerY+19*2){
-            ballYVelo-=2;
-        }else if(ballpos[1]<computtorBlockerY+19*3){
-            ballYVelo-=1;
-        }else if(ballpos[1]<computtorBlockerY+19*4){
-            ballYVelo+=0;
-        }else if(ballpos[1]<computtorBlockerY+19*5){
-            ballYVelo+=1;
-        }else if(ballpos[1]<computtorBlockerY+19*6){
-            ballYVelo+=2;
-        }else if(ballpos[1]<computtorBlockerY+19*7){
-            ballYVelo+=3;
-        }else if(ballpos[1]<computtorBlockerY+19*8){
-            ballYVelo+=4;
+            if (ballpos[1]<computtorBlockerY+19){
+                ballYVelo-=4;
+            }else if(ballpos[1]<computtorBlockerY+19*2){
+                ballYVelo-=3;
+            }else if(ballpos[1]<computtorBlockerY+19*2){
+                ballYVelo-=2;
+            }else if(ballpos[1]<computtorBlockerY+19*3){
+                ballYVelo-=1;
+            }else if(ballpos[1]<computtorBlockerY+19*4){
+                ballYVelo+=0;
+            }else if(ballpos[1]<computtorBlockerY+19*5){
+                ballYVelo+=1;
+            }else if(ballpos[1]<computtorBlockerY+19*6){
+                ballYVelo+=2;
+            }else if(ballpos[1]<computtorBlockerY+19*7){
+                ballYVelo+=3;
+            }else if(ballpos[1]<computtorBlockerY+19*8){
+                ballYVelo+=4;
+            }
         }
 
 
@@ -137,11 +138,11 @@ void updateBallPos(int ballpos[2],int radius,int width, int height,int playerBlo
     //printf("ballpos X:%d%s%d\n",ballpos[0]," Y:", ballpos[1]);
 }
 
-int GetPlayerplayerBlockerY(int y,int height){
+int GetPlayerplayerBlockerY(int y,int height, int ballpos[]){
     if (IsKeyDown(KEY_DOWN)||IsKeyDown(KEY_S)){
-        y+=6;
+        y+=8;
     }else if(IsKeyDown(KEY_UP)||IsKeyDown(KEY_W)){
-        y-=6;
+        y-=8;
     }
     if(y<0){
         y=0;
@@ -149,6 +150,18 @@ int GetPlayerplayerBlockerY(int y,int height){
     if(y>height-152){
         y=height-152;
     }
+
+    // int middle=y+76;
+
+    // int startY=y;
+
+    // y+=ballpos[1]-middle;
+
+    // if (startY-y>7){
+    //     y=startY-7;
+    // }else if(y-startY>7){
+    //     y=startY+7;
+    // }
     
     DrawRectangle(70,y,25,152,WHITE);
     return y;
@@ -168,13 +181,8 @@ int GetComputorBlockerY(int y,int ballpos[], int height, int width){
     }
     
 
-    // if (ballpos[1]>middle){
-    //     y+=7;
-    // }else if (ballpos[1]<middle){
-    //     y-=7;
-    // }
     //printf("blocker y:%d\n",y);
-    DrawRectangle(width-70,y,25,152,RED);
+    DrawRectangle(width-70,y,25,152,PURPLE);
 
     return y;
 }
@@ -183,14 +191,17 @@ int main() {
     // Initialize the window
     int width=1800;
     int height=1000;
+
     InitWindow(width, height, "pong rip off");
+
     int radius=25;
-    int *score =new int[2];
-    score[0]=0,score[1]=0;    
     int *ballpos =new int[2];
     ballpos[0]=width/2;ballpos[1]=height/2;//0 is the x and 1 is the y
+
+    int *score =new int[2];
+    score[0]=0,score[1]=0;    
+   
     int playerBlockerY=height/2,computerBlockerY=height/2;
-    //int* array =new int[2];
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
@@ -201,13 +212,12 @@ int main() {
 
 
 
-        //ballpos[0]=ballpos[0]+10;
 
         computerBlockerY=GetComputorBlockerY(computerBlockerY,ballpos,height,width);
-        playerBlockerY=GetPlayerplayerBlockerY(playerBlockerY,height);
+        playerBlockerY=GetPlayerplayerBlockerY(playerBlockerY,height,ballpos);
 
         updateBallPos(ballpos,radius,width,height,playerBlockerY,computerBlockerY,score);
-        //printf("ballpos:%d%s%d\n",ballpos[0]," ",ballpos[1]);
+        //printf("ballpos:%d%s%d\n",ballpos[0]," , ",ballpos[1]);
         DrawCircle(ballpos[0],ballpos[1],radius,WHITE);
 
 
