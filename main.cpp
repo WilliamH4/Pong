@@ -28,7 +28,7 @@ class blocker{
             ycord=0;
         }
     }
-    void GenerateMovment(const ball& b);
+    void GenerateMovment(const ball& b,int type);
 
     void display(){
         DrawRectangle(xcord,ycord,thickness,blockerHeight,WHITE);
@@ -41,7 +41,7 @@ class blocker{
 class ball{
     public:
     int radius=25;
-    int velo[2]={-5,0};
+    int velo[2]={5,3};
     int pos[2]={400,175/2};
     void updatepos(){
         pos[0]+=velo[0];
@@ -94,12 +94,14 @@ class ball{
         if ((pos[0]-radius<0&&velo[0]<0)){
             velo[0]=-velo[0];
             printf("scored");
+            velo[1]=0;
             score[1]+=1;
 
         //left
         }else if (pos[0]+radius>width&&velo[0]>0){
             velo[0]=velo[0]*-1;
             printf("scored");
+            velo[1]=0;
             score[0]+=1;
 
         }
@@ -109,32 +111,52 @@ class ball{
 
 };
 
-void blocker::GenerateMovment(const ball& b){
+void blocker::GenerateMovment(const ball& b,int type){
         int middle=ycord+blockerHeight/2;
-        int dif=b.pos[1]-middle;
         int maxSpeed=5;
 
         int yvelo=b.velo[1];
 
-        // ydif = ((pos[1] - (b2.ycord+b2.blockerHeight/2)) / (b2.blockerHeight / 2.0f)) * 10.0f;             
+        int target=middle;
+        int dif;
 
-
-
-        ycord=5;
+        if (type==1){
         
-        //printf("nycord: %d%s%d%s%d\n",nycord, " delta: ",delta," yvelo: ",b.velo[1]);
-        //ycord=nycord;
+            target = -(blockerHeight / 2.0f) * ((b.velo[1] / 10.0f) - 1.0f);
 
 
-        //right now the code just trys to match the y cordnits of the blocker with that of the ball but it has a limitid speed to make it beatable
 
-        
+            //ycord=5;
+
+            
+            //printf("nycord: %d%s%d%s%d\n",nycord, " delta: ",delta," yvelo: ",b.velo[1]);
+            //ycord=nycord;
+
+
+            //right now the code just trys to match the y cordnits of the blocker with that of the ball but it has a limitid speed to make it beatable
+
+            dif=(b.pos[1]-target)-ycord;
+            //int dif=b.pos[1]-middle;
+        }else if (type==0){
+
+            dif =b.pos[1]-middle;
+
+        }
+
+
+
         if(dif>maxSpeed){
             dif=maxSpeed;
         }else if(dif<-maxSpeed){
             dif=-maxSpeed;
         }
-        //ycord+=dif;
+        ycord+=dif;
+
+        // ycord=b.pos[1]-target;
+
+        //printf("target:%d%s%d%s%d%s%d\n",target," dif: ",dif," yvelo: ",b.velo[1]," ycord: ",ycord);
+
+
     }
 
 int main() {
@@ -151,6 +173,7 @@ int main() {
 
     InitWindow(width, height, "Pong");
     SetTargetFPS(120);
+    int type=0;
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -163,8 +186,14 @@ int main() {
         player.reciveInput();
         player.display();
 
+        if (score[0]>score[1]){
+            type=1;
+        }else if(score[0]<score[1]){
+            type=0;
+        }
 
-        opponet.GenerateMovment(ball1);
+
+        opponet.GenerateMovment(ball1,type);
         opponet.display();
 
         char text[20];
