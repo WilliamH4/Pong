@@ -4,7 +4,7 @@ C:\msys64\ucrt64\bin\g++.exe -I C:/raylib/include main.cpp -o game.exe -L C:/ray
 
 if %errorlevel% neq 0 (
     echo Build failed.
-    pause
+    
     exit /b %errorlevel%
 )
 
