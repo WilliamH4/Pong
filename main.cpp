@@ -42,7 +42,7 @@ class ball{
     public:
     int radius=25;
     int velo[2]={-5,0};
-    int pos[2]={400,100};
+    int pos[2]={400,175/2};
     void updatepos(){
         pos[0]+=velo[0];
         pos[1]+=velo[1];
@@ -54,10 +54,9 @@ class ball{
         //for the player blocker
         if (b1.ycord<pos[1]&&b1.ycord+b1.blockerHeight>pos[1]&&pos[0]-radius<b1.xcord+b1.thickness){
             if (velo[0]<0){
-                int middle=b1.ycord+b1.blockerHeight/2;
-                float placeholder = ((pos[1] - middle) / (b1.blockerHeight / 2.0f)) * 10.0f;             
-                printf("pholder: %f\n",placeholder);
-                velo[1]+=placeholder;
+                float ydif = ((pos[1] - (b1.ycord+b1.blockerHeight/2)) / (b1.blockerHeight / 2.0f)) * 10.0f;             
+                printf("pholder: %f\n",ydif);
+                velo[1]+=ydif;
                 velo[0]=-velo[0];
             }
             return;
@@ -66,6 +65,13 @@ class ball{
         //for the opponet
         if (b2.ycord<pos[1]&&b2.ycord+b2.blockerHeight>pos[1]&&pos[0]+radius>b2.xcord){
             if (velo[0]>0){
+
+                //the math to find out how much to change the y velo by
+                float ydif = ((pos[1] - (b2.ycord+b2.blockerHeight/2)) / (b2.blockerHeight / 2.0f)) * 10.0f;             
+                printf("pholder: %f\n",ydif);
+                velo[1]+=ydif;
+
+
                 velo[0]=-velo[0];
             }
             return;
@@ -88,13 +94,13 @@ class ball{
         if ((pos[0]-radius<0&&velo[0]<0)){
             velo[0]=-velo[0];
             printf("scored");
-            score[0]+=1;
+            score[1]+=1;
 
         //left
         }else if (pos[0]+radius>width&&velo[0]>0){
             velo[0]=velo[0]*-1;
             printf("scored");
-            score[1]+=1;
+            score[0]+=1;
 
         }
 
@@ -107,13 +113,28 @@ void blocker::GenerateMovment(const ball& b){
         int middle=ycord+blockerHeight/2;
         int dif=b.pos[1]-middle;
         int maxSpeed=5;
+
+        int yvelo=b.velo[1];
+
+        // ydif = ((pos[1] - (b2.ycord+b2.blockerHeight/2)) / (b2.blockerHeight / 2.0f)) * 10.0f;             
+
+
+
+        ycord=5;
+        
+        //printf("nycord: %d%s%d%s%d\n",nycord, " delta: ",delta," yvelo: ",b.velo[1]);
+        //ycord=nycord;
+
+
         //right now the code just trys to match the y cordnits of the blocker with that of the ball but it has a limitid speed to make it beatable
+
+        
         if(dif>maxSpeed){
             dif=maxSpeed;
         }else if(dif<-maxSpeed){
             dif=-maxSpeed;
         }
-        ycord+=dif;
+        //ycord+=dif;
     }
 
 int main() {
