@@ -41,12 +41,31 @@ class blocker{
 class ball{
     public:
     int radius=25;
-    int velo[2]={5,3};
+    int startingVelo[2]={10,3};
+    int velo[2]={startingVelo[0],startingVelo[1]};
     int pos[2]={400,175/2};
+    int clock=0;
     void updatepos(){
+        clock+=1;
+        if (clock>500){
+            clock=0;
+            if (velo[0]>0){
+                velo[0]+=1;
+            }else {
+                velo[0]-=1;
+            }
+        }
         pos[0]+=velo[0];
         pos[1]+=velo[1];
+
         DrawCircle(pos[0],pos[1],radius,WHITE);
+    }
+    void reset(){
+        velo[0]=startingVelo[0];
+        velo[1]=startingVelo[1];
+        pos[0]=width/2;
+        pos[1]=height/2;
+
     }
     
     void checkcollison(const blocker& b1, const blocker& b2){
@@ -94,14 +113,14 @@ class ball{
         if ((pos[0]-radius<0&&velo[0]<0)){
             velo[0]=-velo[0];
             printf("scored");
-            velo[1]=0;
+            reset();
             score[1]+=1;
 
         //left
         }else if (pos[0]+radius>width&&velo[0]>0){
             velo[0]=velo[0]*-1;
             printf("scored");
-            velo[1]=0;
+            reset();
             score[0]+=1;
 
         }
@@ -119,10 +138,46 @@ void blocker::GenerateMovment(const ball& b,int type){
 
         int target=middle;
         int dif;
+        int endy=height/2;
+        int endSign;
+
+        type=1;
+
+
+        if (b.velo[0]>0){
+
+            if (b.velo[1]>0){
+                endSign=1;
+            }else if (b.velo[1]<0){
+                endSign=-1;
+            }
+
+            
+            
+            int deltaX=xcord-(b.pos[0]+b.radius);
+
+            int framesTillContact=deltaX/b.velo[0];
+
+            endy=b.pos[1]+b.velo[1]*framesTillContact;
+
+            while (endy<0||endy>height){
+
+                if (endy<0){
+                    endy=-endy;
+                    endSign=1;
+                }else if (endy>height){
+                    endy=height-(endy-height);
+                    endSign=-1;
+                }
+            }
+            
+            //printf("endy: %d\n",endy);
+        }
+
 
         if (type==1){
         
-            target = -(blockerHeight / 2.0f) * ((b.velo[1] / 10.0f) - 1.0f);
+            target = -(blockerHeight / 2.0f) * ((endSign*abs(b.velo[1]) / 10.0f) - 1.0f);
 
 
 
@@ -135,11 +190,11 @@ void blocker::GenerateMovment(const ball& b,int type){
 
             //right now the code just trys to match the y cordnits of the blocker with that of the ball but it has a limitid speed to make it beatable
 
-            dif=(b.pos[1]-target)-ycord;
+            dif=(endy-target)-ycord;
             //int dif=b.pos[1]-middle;
         }else if (type==0){
 
-            dif =b.pos[1]-middle;
+            dif =endy-middle;
 
         }
 
