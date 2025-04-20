@@ -15,7 +15,7 @@ class blocker{
     int thickness=25;
     int blockerHeight=175;
     int xcord;
-    int maxSpeed=7;
+    int maxSpeed=8;
     void reciveInput(){
         if(IsKeyDown(KEY_UP)){
             ycord-=maxSpeed;
@@ -41,7 +41,7 @@ class blocker{
 class ball{
     public:
     int radius=25;
-    int startingVelo[2]={10,3};
+    int startingVelo[2]={10,1};
     int velo[2]={startingVelo[0],startingVelo[1]};
     int pos[2]={400,175/2};
     int clock=0;
@@ -132,7 +132,7 @@ class ball{
 
 void blocker::GenerateMovment(const ball& b,int type){
         int middle=ycord+blockerHeight/2;
-        int maxSpeed=5;
+        int maxSpeed=3;
 
         int yvelo=b.velo[1];
 
@@ -160,13 +160,13 @@ void blocker::GenerateMovment(const ball& b,int type){
 
             endy=b.pos[1]+b.velo[1]*framesTillContact;
 
-            while (endy<0||endy>height){
+            while (endy<b.radius||endy>height-b.radius){
 
-                if (endy<0){
-                    endy=-endy;
+                if (endy<b.radius){
+                    endy=b.radius-(endy-b.radius);
                     endSign=1;
-                }else if (endy>height){
-                    endy=height-(endy-height);
+                }else if (endy>height-b.radius){
+                    endy=(height-b.radius)-(endy-(height-b.radius));
                     endSign=-1;
                 }
             }
