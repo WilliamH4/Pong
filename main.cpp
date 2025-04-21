@@ -37,17 +37,20 @@ class blocker{
 
 };
 
+blocker player;
+blocker opponet;
+
 
 class ball{
     public:
     int radius=25;
     int startingVelo[2]={10,1};
     int velo[2]={startingVelo[0],startingVelo[1]};
-    int pos[2]={400,175/2};
+    int pos[2]={100,175/2};
     int clock=0;
     void updatepos(){
         clock+=1;
-        if (clock>500){
+        if (clock>250){
             clock=0;
             if (velo[0]>0){
                 velo[0]+=1;
@@ -65,6 +68,7 @@ class ball{
         velo[1]=startingVelo[1];
         pos[0]=width/2;
         pos[1]=height/2;
+        opponet.ycord=height/2;
 
     }
     
@@ -112,23 +116,23 @@ class ball{
         //left
         if ((pos[0]-radius<0&&velo[0]<0)){
             velo[0]=-velo[0];
-            printf("scored");
+            printf("scored\n");
             reset();
             score[1]+=1;
 
         //left
         }else if (pos[0]+radius>width&&velo[0]>0){
             velo[0]=velo[0]*-1;
-            printf("scored");
+            printf("scored\n");
             reset();
             score[0]+=1;
 
         }
 
-
     }
 
 };
+
 
 void blocker::GenerateMovment(const ball& b,int type){
         int middle=ycord+blockerHeight/2;
@@ -214,16 +218,16 @@ void blocker::GenerateMovment(const ball& b,int type){
 
     }
 
+ball ball1;
+
+
 int main() {
     SetTraceLogLevel(LOG_NONE);
 
-    ball ball1;
 
-    blocker player;
-    blocker opponet;
+    opponet.xcord=width-125;
 
     player.xcord=50;
-    opponet.xcord=width-125;
 
 
     InitWindow(width, height, "Pong");
