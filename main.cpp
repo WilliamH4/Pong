@@ -13,7 +13,7 @@ class blocker{
     public:
     int ycord=0;
     int thickness=25;
-    int blockerHeight=175;
+    int blockerHeight=300;
     int xcord;
     int maxSpeed=8;
     void reciveInput(){
@@ -43,7 +43,7 @@ blocker opponet;
 
 class ball{
     public:
-    int radius=25;
+    int radius=15;
     int startingVelo[2]={10,1};
     int velo[2]={startingVelo[0],startingVelo[1]};
     int pos[2]={100,175/2};
@@ -78,7 +78,7 @@ class ball{
         if (b1.ycord<pos[1]&&b1.ycord+b1.blockerHeight>pos[1]&&pos[0]-radius<b1.xcord+b1.thickness){
             if (velo[0]<0){
                 float ydif = ((pos[1] - (b1.ycord+b1.blockerHeight/2)) / (b1.blockerHeight / 2.0f)) * 10.0f;             
-                printf("pholder: %f\n",ydif);
+                //printf("pholder: %f\n",ydif);
                 velo[1]+=ydif;
                 velo[0]=-velo[0];
             }
@@ -91,7 +91,7 @@ class ball{
 
                 //the math to find out how much to change the y velo by
                 float ydif = ((pos[1] - (b2.ycord+b2.blockerHeight/2)) / (b2.blockerHeight / 2.0f)) * 10.0f;             
-                printf("pholder: %f\n",ydif);
+                //printf("pholder: %f\n",ydif);
                 velo[1]+=ydif;
 
 
@@ -136,69 +136,69 @@ class ball{
 
 void blocker::GenerateMovment(const ball& b,int type){
         int middle=ycord+blockerHeight/2;
-        int maxSpeed=3;
+        int maxSpeed=score[0]/2-score[1]/2+3;
 
         int yvelo=b.velo[1];
 
         int target=middle;
         int dif;
-        int endy=height/2;
+        int targetY=height/2;
         int endSign;
 
         type=1;
 
+        if (type<3){
 
-        if (b.velo[0]>0){
+            targetY=b.pos[1];
 
-            if (b.velo[1]>0){
-                endSign=1;
-            }else if (b.velo[1]<0){
-                endSign=-1;
-            }
+        }else if (type>=3){
 
-            
-            
-            int deltaX=xcord-(b.pos[0]+b.radius);
+            if (b.velo[0]>0){
 
-            int framesTillContact=deltaX/b.velo[0];
-
-            endy=b.pos[1]+b.velo[1]*framesTillContact;
-
-            while (endy<b.radius||endy>height-b.radius){
-
-                if (endy<b.radius){
-                    endy=b.radius-(endy-b.radius);
+                if (b.velo[1]>0){
                     endSign=1;
-                }else if (endy>height-b.radius){
-                    endy=(height-b.radius)-(endy-(height-b.radius));
+                }else if (b.velo[1]<0){
                     endSign=-1;
                 }
+
+                
+                
+                int deltaX=xcord-(b.pos[0]+b.radius);
+
+                int framesTillContact=deltaX/b.velo[0];
+
+                targetY=b.pos[1]+b.velo[1]*framesTillContact;
+
+                while (targetY<b.radius||targetY>height-b.radius){
+
+                    if (targetY<b.radius){
+                        targetY=b.radius-(targetY-b.radius);
+                        endSign=1;
+                    }else if (targetY>height-b.radius){
+                        targetY=(height-b.radius)-(targetY-(height-b.radius));
+                        endSign=-1;
+                    }
+                }
+                
+                //printf("targetY: %d\n",targetY);
             }
-            
-            //printf("endy: %d\n",endy);
+
         }
-
-
-        if (type==1){
+        if (type==6){
         
             target = -(blockerHeight / 2.0f) * ((endSign*abs(b.velo[1]) / 10.0f) - 1.0f);
 
 
 
-            //ycord=5;
-
-            
-            //printf("nycord: %d%s%d%s%d\n",nycord, " delta: ",delta," yvelo: ",b.velo[1]);
-            //ycord=nycord;
 
 
             //right now the code just trys to match the y cordnits of the blocker with that of the ball but it has a limitid speed to make it beatable
 
-            dif=(endy-target)-ycord;
+            dif=(targetY-target)-ycord;
             //int dif=b.pos[1]-middle;
-        }else if (type==0){
+        }else if (type==1){
 
-            dif =endy-middle;
+            dif =targetY-middle;
 
         }
 
